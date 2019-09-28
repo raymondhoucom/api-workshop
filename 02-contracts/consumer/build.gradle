@@ -57,7 +57,7 @@ new File("${project.rootDir}/target/pacts").mkdirs()
 
 pact {
     publish {
-        pactBrokerUrl = "http://localhost:8085"
+        pactBrokerUrl = "http://localhost:8086"
         pactDirectory = "${project.rootDir}/target/pacts"
     }
 }

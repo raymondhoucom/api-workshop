@@ -1,0 +1,59 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.springframework.cloud:spring-cloud-contract-gradle-plugin:2.1.3.RELEASE'
+		classpath "org.springframework.cloud:spring-cloud-contract-pact:2.1.3.RELEASE"
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.8.RELEASE"
+		classpath "org.springframework.cloud:spring-cloud-contract-pact:2.1.2.RELEASE"
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'spring-cloud-contract'
+
+group = 'com.ms.clientdata'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "Greenwich.SR3")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compile("io.springfox:springfox-swagger2:2.9.2")
+	compile("io.springfox:springfox-swagger-ui:2.9.2")
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+contracts {
+	baseClassForTests = 'com.ms.clientdata.apiworkshop.ContractBase'
+	// fully qualified name to a class that will be the base class for your generated test classes
+	
+	contractDependency {
+		stringNotation = "com.ms.clientdata.apiworkshop:todo-api-producer-pact:+"
+	}
+	contractRepository {
+		repositoryUrl = "pact://http://localhost:8086"
+	}
+	contractsMode = "REMOTE"
+}
